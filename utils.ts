@@ -97,6 +97,29 @@ export function saveGroupConfig(jid: string, key: string, value: any) {
   fs.writeFileSync(CONFIG_PATH, JSON.stringify(data, null, 2));
 }
 
+export interface PaymentItem {
+  id: string;
+  key: string;
+  paymentData: string;
+  imageUrl: string;
+  buttonData?: any[];
+}
+
+const PAYMENT_DB_PATH = path.join(DATABASE_DIR, 'db_payment.json');
+
+export function readDatabasePayment(): PaymentItem[] {
+  if (!fs.existsSync(PAYMENT_DB_PATH)) return [];
+  try {
+    return JSON.parse(fs.readFileSync(PAYMENT_DB_PATH, 'utf-8'));
+  } catch {
+    return [];
+  }
+}
+
+export function writeDatabasePayment(data: PaymentItem[]) {
+  fs.writeFileSync(PAYMENT_DB_PATH, JSON.stringify(data, null, 3));
+}
+
 export async function processTemplate(text: string, ctx: any, pesananText: string = '') {
   const { client, event, senderJid, replyTarget } = ctx;
   
