@@ -15,7 +15,7 @@ export default {
       return;
     }
 
-    await client.message.send(replyTarget, 'Menjalankan update ...', { quote: event });
+    await client.message.send(replyTarget, 'Menjalankan update bos ku...', { quote: event });
 
     try {
       // Kita gunakan git stash agar perubahan lokal (seperti setting.ts) 
