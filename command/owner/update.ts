@@ -33,6 +33,14 @@ export default {
         const result = await execAsync('git pull origin main --no-edit -X theirs');
         stdout = result.stdout;
         stderr = result.stderr;
+        
+        // Proteksi: Kembalikan setting.ts ke versi lokal kita (sebelum pull)
+        try {
+          await execAsync('git checkout HEAD@{1} -- setting.ts');
+          await execAsync('git commit -m "Auto-restore setting.ts lokal"');
+        } catch (e) {
+          // Abaikan jika tidak ada perbedaan
+        }
       } catch (pullError: any) {
         const errMsg = pullError.message || '';
         // Cek jika error karena folder belum menjadi git repository (misal panel baru via ZIP)

@@ -4,8 +4,16 @@ import ffmpegStatic from 'ffmpeg-static';
 import fs from 'fs';
 import path from 'path';
 
-// Mengatur path untuk ffmpeg-static
-ffmpeg.setFfmpegPath(ffmpegStatic as string);
+import os from 'os';
+
+// Mengatur path untuk ffmpeg:
+// - Di Windows (laptop), gunakan ffmpeg-static
+// - Di Linux (Panel Pterodactyl), gunakan ffmpeg bawaan sistem agar tidak terjadi error ENOENT / musl libc
+if (os.platform() === 'win32') {
+  ffmpeg.setFfmpegPath(ffmpegStatic as string);
+} else {
+  ffmpeg.setFfmpegPath('ffmpeg'); // Menggunakan ffmpeg dari PATH sistem
+}
 
 export default {
   name: 'sticker',
