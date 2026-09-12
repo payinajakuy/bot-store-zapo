@@ -5,6 +5,7 @@ export const setting = {
   
   YAPARI_BASE_URL: "https://yapari.web.id/",
   YAPARI_API_KEY: "yapari_dc8cb421a8333b349b9227cdf108f7db",
-  OWNER: "6282277253795"
+  OWNER: "6282277253795",
+  OWNER_NAME: "Richapps"
 };
 

@@ -26,6 +26,7 @@
     "zapo-js": "^1.8.2"
   },
   "devDependencies": {
+    "@types/fluent-ffmpeg": "^2.1.28",
     "@types/node": "^26.4.1",
     "@types/qrcode-terminal": "^0.12.2",
     "tsx": "^4.23.13",
