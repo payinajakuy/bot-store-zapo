@@ -13,8 +13,8 @@ export default {
       return;
     }
 
-    const parts = text.trim().split(/\s+/);
-    const content = parts.slice(1).join(' ');
+    // Mengambil isi tanpa menghapus format baris baru (enter)
+    const content = text.replace(/^setlist\s+/i, '').trim();
     
     if (content) {
       if (content.split('|||').length !== 2) {
