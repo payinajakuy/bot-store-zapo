@@ -23,14 +23,38 @@ export default {
         await execAsync('git add .');
         await execAsync('git commit -m "Auto-commit lokal sebelum update dari GitHub"');
       } catch (e) {
-        // Abaikan jika tidak ada perubahan lokal (working tree clean)
+        // Abaikan jika tidak ada perubahan lokal atau belum menjadi repo git
       }
 
-      // 2. Lakukan pull dari server, jika ada baris kode yang sama-sama diedit (konflik),
-      // utamakan versi terbaru dari GitHub (-X theirs)
-      let cmd = 'git pull origin main --no-edit -X theirs';
-      
-      const { stdout, stderr } = await execAsync(cmd);
+      let stdout = '';
+      let stderr = '';
+
+      try {
+        const result = await execAsync('git pull origin main --no-edit -X theirs');
+        stdout = result.stdout;
+        stderr = result.stderr;
+      } catch (pullError: any) {
+        const errMsg = pullError.message || '';
+        // Cek jika error karena folder belum menjadi git repository (misal panel baru via ZIP)
+        if (errMsg.includes('not a git repository')) {
+          await client.message.send(replyTarget, 'Mendeteksi pemasangan via ZIP. Menginisialisasi sistem Update otomatis... ⏳', { quote: event });
+          
+          try {
+            await execAsync('git init');
+            await execAsync('git remote add origin https://github.com/payinajakuy/bot-store-zapo.git');
+            await execAsync('git fetch');
+            await execAsync('git branch -M main');
+            await execAsync('git reset --hard origin/main');
+            
+            await client.message.send(replyTarget, '*INISIALISASI & UPDATE BERHASIL* ✅\n\nBot berhasil disinkronkan dengan GitHub. File sudah versi terbaru!', { quote: event });
+            return;
+          } catch (initErr: any) {
+            throw new Error(`Gagal menginisialisasi sistem Git: ${initErr.message}`);
+          }
+        } else {
+          throw pullError; // Error lain lempar ke catch utama
+        }
+      }
       
       if (stdout.includes('Already up to date.')) {
         await client.message.send(replyTarget, '*UPDATE BERHASIL*\n\n✅ Bot sudah berada di versi terbaru. Tidak ada file yang ditambahkan atau diubah dari Server.', { quote: event });
