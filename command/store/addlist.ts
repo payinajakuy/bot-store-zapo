@@ -17,8 +17,8 @@ export default {
       return;
     }
 
-    const parts = text.trim().split(/\s+/);
-    const content = parts.slice(1).join(' ');
+    // Hapus kata 'addlist ' di awal secara case-insensitive tanpa merusak baris baru (enter)
+    const content = text.replace(/^addlist\s+/i, '').trim();
     if (!content.includes('@')) {
       await client.message.send(replyTarget, 'Format salah! Gunakan: addlist Judul@Isinya');
       return;
